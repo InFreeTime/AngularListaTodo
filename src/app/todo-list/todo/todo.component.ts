@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Todo } from 'src/app/shared/interfaces/todo.interface';
+import {Component, Input} from '@angular/core';
+import {Todo} from "../../shared/interfaces/todo.interface";
 
 @Component({
   selector: 'app-todo',
@@ -7,11 +7,15 @@ import { Todo } from 'src/app/shared/interfaces/todo.interface';
   styleUrls: ['./todo.component.css']
 })
 export class TodoComponent {
-  @Input() todo!: Todo;
-  @Input() i!: number;
+ @Input() todo!: Todo;
+ @Input() i!: number;
+ openModal = false;
 
-  changeTodoStatus(todo: Todo){
+  changeTodoStatus(todo: Todo) {
     todo.isComplete = !todo.isComplete;
   }
 
+  toggleModal(): void {
+    this.openModal = !this.openModal;
+  }
 }
