@@ -2,6 +2,8 @@
 <input type="text" #name class="form-control" name="todo">
 <button type="button" class="btn btn-primary mt-3" (click)="addTodo(name.value)">Dodaj zadanie</button>
 
+<app-alert *ngIf="errorMessage" [errorMessage]="errorMessage" (clearMessage)="clearErrorMessage()"></app-alert>
+
 <div class="mt-5">
     <h4>Zadania:</h4>
     <ul class="list-group todo-list" *ngIf="todos.length > 0">

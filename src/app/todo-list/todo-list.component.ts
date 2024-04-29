@@ -9,10 +9,12 @@ import { Todo } from '../shared/interfaces/todo.interface';
 export class TodoListComponent {
 
   todos:Todo[]=[];
+  errorMessage = '';
+  
 
   addTodo(todo: string):void{
     if(todo.length <=3){
-      alert('Zadanie powinno mieć co najmniej 4 znaki');
+      this.errorMessage = 'Zadanie powinno mieć co najmniej 4 znaki!';
       return;
     }
     this.todos.push({name:todo, isComplete:false});
@@ -23,5 +25,10 @@ export class TodoListComponent {
   changeTodoStatus(todo: Todo){
     todo.isComplete = !todo.isComplete;
     console.log(this.todos);
+  }
+
+
+  clearErrorMessage(){
+    this.errorMessage = '';
   }
 }
