@@ -22,10 +22,7 @@ export class TodoListComponent {
   }
 
 
-  changeTodoStatus(todo: Todo){
-    todo.isComplete = !todo.isComplete;
-    console.log(this.todos);
-  }
+ 
 
 
   clearErrorMessage(){
