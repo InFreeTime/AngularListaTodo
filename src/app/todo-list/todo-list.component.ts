@@ -7,11 +7,11 @@ import { Todo } from '../shared/interfaces/todo.interface';
   styleUrls: ['./todo-list.component.css']
 })
 export class TodoListComponent {
-
+  
   todos:Todo[]=[];
   errorMessage = '';
   
-
+  
   addTodo(todo: string):void{
     if(todo.length <=3){
       this.errorMessage = 'Zadanie powinno mieć co najmniej 4 znaki!';
@@ -20,12 +20,18 @@ export class TodoListComponent {
     this.todos.push({name:todo, isComplete:false});
     console.log('Aktualna lista todo: ', this.todos);
   }
-
-
- 
-
-
+  
+  
+  
+  
+  
   clearErrorMessage(){
     this.errorMessage = '';
   }
+
+
+  deleteTodo(i: number) {
+    this.todos = this.todos.filter((todo :Todo, index :number) => index !==i)
+  }
+  
 }
