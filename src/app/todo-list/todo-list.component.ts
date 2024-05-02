@@ -1,15 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Todo } from '../shared/interfaces/todo.interface';
+import { TodoService } from '../core/services/todo.service';
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent {
+export class TodoListComponent implements OnChanges {
+
+  @Input() test! : string;
+
   
-  todos:Todo[]=[];
+  todos:Todo[]=this.todoServices.todos;
   errorMessage = '';
+
+  constructor(private todoServices: TodoService){};
+
+  ngOnChanges(changes: SimpleChanges): void {
+      console.log(changes);
+      
+  }
   
   
   addTodo(todo: string):void{
@@ -17,8 +28,9 @@ export class TodoListComponent {
       this.errorMessage = 'Zadanie powinno mieć co najmniej 4 znaki!';
       return;
     }
-    this.todos.push({name:todo, isComplete:false});
-    console.log('Aktualna lista todo: ', this.todos);
+  
+    this.todoServices.addTodo(todo);
+    this.todos = this.todoServices.todos;
   }
   
   
@@ -31,7 +43,11 @@ export class TodoListComponent {
 
 
   deleteTodo(i: number) {
-    this.todos = this.todos.filter((todo :Todo, index :number) => index !==i)
-  }
   
+    this.todoServices.deleteTodo(i);
+    this.todos = this.todoServices.todos;
+
+
+  }
+
 }
