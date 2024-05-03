@@ -7,7 +7,9 @@ import { Todo } from 'src/app/shared/interfaces/todo.interface';
 export class TodoService {
 
 
-  private _todos:Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+  // private _todos:Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+  private _todos:Todo[] = [];
+
 
   constructor() {}
     
@@ -23,7 +25,7 @@ export class TodoService {
     }
 
     addTodo(name: string):void{
-      this._todos.push({name:name, isComplete:false});
+    //  this._todos.push({name:name, isComplete:false});
       this.saveToLocalStorage();
     }
 

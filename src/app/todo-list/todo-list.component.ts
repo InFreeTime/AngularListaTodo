@@ -1,13 +1,14 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Todo } from '../shared/interfaces/todo.interface';
 import { TodoService } from '../core/services/todo.service';
+import { TodoApiService } from '../core/services/todo-api.service';
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent implements OnChanges {
+export class TodoListComponent implements OnInit {
 
   @Input() test! : string;
 
@@ -15,11 +16,20 @@ export class TodoListComponent implements OnChanges {
   todos:Todo[]=this.todoServices.todos;
   errorMessage = '';
 
-  constructor(private todoServices: TodoService){};
+  constructor(private todoServices: TodoService, private todoApiService: TodoApiService){};
 
-  ngOnChanges(changes: SimpleChanges): void {
-      console.log(changes);
+  // ngOnChanges(changes: SimpleChanges): void {
+  //     console.log(changes);
       
+  // }
+
+  ngOnInit(): void {
+    this.todoApiService.getTodos().subscribe({
+      next: todos => {
+        // console.log(todos);
+        this.todos = todos;
+      }
+    })
   }
   
   
