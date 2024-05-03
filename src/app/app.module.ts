@@ -12,6 +12,7 @@ import { ModalComponent } from './shared/components/modal/modal.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { TodoDetailsComponent } from './todo-details/todo-details.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     TodoComponent,
     ModalComponent,
     HomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    TodoDetailsComponent
   ],
   imports: [
     BrowserModule,

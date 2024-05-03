@@ -16,6 +16,12 @@ export class TodoService {
       return this._todos.slice(); //kopia tablicy
     }
 
+
+    getTodo(index: number): Todo{
+      return this.todos[index];
+
+    }
+
     addTodo(name: string):void{
       this._todos.push({name:name, isComplete:false});
       this.saveToLocalStorage();
