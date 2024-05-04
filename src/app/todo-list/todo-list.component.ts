@@ -1,63 +1,69 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { Todo } from '../shared/interfaces/todo.interface';
-import { TodoService } from '../core/services/todo.service';
-import { TodoApiService } from '../core/services/todo-api.service';
+import {
+  Component, OnDestroy, OnInit,
+} from '@angular/core';
+import {Todo} from "../shared/interfaces/todo.interface";
+import {TodoService} from "../core/services/todo.service";
+import {Subscription} from "rxjs";
+import {TodoApiService} from "../core/services/todo-api.service";
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent implements OnInit {
-
-  @Input() test! : string;
-
-  
-  todos:Todo[]=this.todoServices.todos;
+//  implements AfterViewInit, AfterViewChecked
+export class TodoListComponent implements OnInit, OnDestroy{
+  todos: Todo[] = this.todoService.todos;
   errorMessage = '';
+  sub!: Subscription;
 
-  constructor(private todoServices: TodoService, private todoApiService: TodoApiService){};
+  constructor(private todoService: TodoService, private todoApiService: TodoApiService) {}
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //     console.log(changes);
-      
-  // }
 
   ngOnInit(): void {
-    this.todoApiService.getTodos().subscribe({
-      next: todos => {
-        // console.log(todos);
-        this.todos = todos;
+     this.sub = this.todoService.todoChanged.subscribe({
+       next: arrTodos => this.todos = arrTodos
+     });
+
+     if (this.todos.length === 0) {
+       this.todoApiService.getTodos().subscribe({
+         error: err => {
+           this.errorMessage = 'Wystąpił błąd. Spróbuj ponownie.'
+         }
+       })
+     }
+  }
+
+
+  addTodo(todo: string): void {
+    this.todoApiService.postTodo({name: todo, isComplete: false}).subscribe({
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd. Spróbuj ponownie.'
       }
-    })
+    });
   }
-  
-  
-  addTodo(todo: string):void{
-    if(todo.length <=3){
-      this.errorMessage = 'Zadanie powinno mieć co najmniej 4 znaki!';
-      return;
-    }
-  
-    this.todoServices.addTodo(todo);
-    this.todos = this.todoServices.todos;
-  }
-  
-  
-  
-  
-  
-  clearErrorMessage(){
+
+  clearErrorMessage() {
     this.errorMessage = '';
   }
 
-
-  deleteTodo(i: number) {
-  
-    this.todoServices.deleteTodo(i);
-    this.todos = this.todoServices.todos;
-
-
+  deleteTodo(id: number) {
+    this.todoApiService.deleteTodo(id).subscribe({
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd. Spróbuj ponownie.'
+      }
+    })
   }
 
+  changeTodoStatus(id: number, todo: Todo) {
+    this.todoApiService.patchTodo(id, {isComplete: !todo.isComplete}).subscribe({
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd. Spróbuj ponownie.'
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
 }

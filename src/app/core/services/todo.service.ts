@@ -1,43 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Todo } from 'src/app/shared/interfaces/todo.interface';
+import {Todo} from "../../shared/interfaces/todo.interface";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
 
+  // private _todos: Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
+  private _todos: Todo[] = [];
+  todoChanged = new Subject<Todo[]>();
 
-  // private _todos:Todo[] = JSON.parse(localStorage.getItem('todos')!) ?? [];
-  private _todos:Todo[] = [];
+  constructor() { }
 
+  public get todos() {
+    return this._todos.slice();
+  }
 
-  constructor() {}
-    
-    
-    public get todos(){
-      return this._todos.slice(); //kopia tablicy
+  public set todos(arrTodos: Todo[]) {
+    this._todos = [...arrTodos];
+    this.todoChanged.next(this.todos)
+  }
+
+  getTodo(index: number): Todo | undefined {
+    return this.todos[index];
+  }
+
+  addTodo(todo: Todo): void {
+    this._todos.push(todo);
+    this.todoChanged.next(this.todos);
+  }
+
+  deleteTodo(id: number) {
+    this._todos = this.todos.filter((todo, index) => todo.id !== id)
+    this.todoChanged.next(this.todos);
+  }
+
+  changeTodoStatus(id: number, isComplete: boolean) {
+    const searchedTodo = this.todos.find(todo => todo.id === id);
+    if (searchedTodo) {
+      searchedTodo.isComplete = isComplete;
     }
+    this.todoChanged.next(this.todos);
+  }
 
-
-    getTodo(index: number): Todo{
-      return this.todos[index];
-
-    }
-
-    addTodo(name: string):void{
-    //  this._todos.push({name:name, isComplete:false});
-      this.saveToLocalStorage();
-    }
-
-
-    deleteTodo(i: number) {
-      this._todos = this.todos.filter((todo :Todo, index :number) => index !==i)
-      this.saveToLocalStorage();
-    }
-
-    saveToLocalStorage(){
-      localStorage.setItem('todos', JSON.stringify(this.todos));
-
-    }
-   
+  // saveToLocalStorage() {
+  //   localStorage.setItem('todos', JSON.stringify(this.todos));
+  // }
 }

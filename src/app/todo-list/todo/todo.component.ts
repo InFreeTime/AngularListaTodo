@@ -1,32 +1,56 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import {Todo} from "../../shared/interfaces/todo.interface";
-import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from "@angular/router";
 
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css']
 })
-//implements OnChanges
-export class TodoComponent   {
-
-
+// implements OnChanges
+// implements OnInit
+export class TodoComponent{
  @Input() todo!: Todo;
+ @Input() id!: number;
  @Input() i!: number;
  @Output() delete = new EventEmitter<void>();
-
+ @Output() changeStatus = new EventEmitter<number>();
+ // @ViewChild('li') li!: ElementRef;
  openModal = false;
 
- constructor(private router: Router, private route: ActivatedRoute){}
 
-// ngOnChanges(changes: SimpleChanges): void {
-//   console.log(changes);
-  
-    
+constructor(private router: Router, private route: ActivatedRoute) {}
+
+// ngOnInit(): void {
+//   this.timeout = setTimeout(() => {
+//     console.log('setTImeout')
+//   }, 3000)
 // }
 
-  changeTodoStatus(todo: Todo) {
-    todo.isComplete = !todo.isComplete;
+ // ngOnChanges(changes: SimpleChanges): void {
+ //   console.log(changes)
+ // }
+ //
+ //  ngDoCheck(): void {
+ //    console.log('ngDoCheck został wykonany!')
+ //  }
+
+  // ngAfterViewInit(): void {
+  //   console.log(this.li)
+  // }
+
+  // ngOnDestroy(): void {
+  //   console.log('test')
+  //   clearTimeout(this.timeout);
+  // }
+
+  changeTodoStatus() {
+    this.changeStatus.emit(this.id);
   }
 
   toggleModal(): void {
@@ -38,11 +62,11 @@ export class TodoComponent   {
   }
 
   navigateToDetails() {
-    const navigationExtras: NavigationExtras = {
-      relativeTo: this.route,
-      // state: {example : 'test'}
-      // queryParams: {id: this.i, test: 'wartosc'}
-    }
-    this.router.navigate([this.i], navigationExtras);
+  const navigationExtras: NavigationExtras = {
+    relativeTo: this.route,
+    // state: { example: 'test' }
+    // queryParams: {id: this.i, test: 'wartosc'}
+  }
+    this.router.navigate([this.id], navigationExtras)
   }
 }
