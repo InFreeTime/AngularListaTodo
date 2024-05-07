@@ -60,7 +60,7 @@ export class TodoListComponent implements OnInit, OnDestroy{
       error: err => {
         this.errorMessage = 'Wystąpił błąd. Spróbuj ponownie.'
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
